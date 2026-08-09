@@ -27,7 +27,7 @@ Loaded via `python-dotenv` from `src/backend/.env` (see `.env.example`). Process
 | `LIVEKIT_URL` | yes | LiveKit WebSocket URL (e.g. `wss://…livekit.cloud`) |
 | `LIVEKIT_API_KEY` | yes | LiveKit API key |
 | `LIVEKIT_API_SECRET` | yes | LiveKit API secret (server-side only; never returned to clients) |
-| `FRONTEND_ORIGIN` | no | CORS origin (default `http://localhost:5173`) |
+| `FRONTEND_ORIGIN` | no | Comma-separated CORS origins (default local Vite ports). Use `*` to allow any origin. |
 | `TOKEN_TTL_SECONDS` | no | Access token TTL (default `3600`) |
 
 ## Run

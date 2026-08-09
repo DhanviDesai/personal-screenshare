@@ -46,19 +46,29 @@ async def validation_exception_handler(
 
 
 def _cors_origins() -> list[str]:
+    """Browser origins permitted to call the API (see FRONTEND_ORIGIN)."""
     try:
-        settings = get_settings()
-        return [settings.frontend_origin, "http://localhost:5173", "http://127.0.0.1:5173"]
+        return get_settings().cors_origins
     except ValidationError:
-        return ["http://localhost:5173", "http://127.0.0.1:5173"]
+        return [
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+            "http://localhost:5174",
+            "http://127.0.0.1:5174",
+        ]
 
+
+_CORS_ORIGINS = _cors_origins()
+# allow_credentials cannot be used with wildcard origin.
+_CORS_CREDENTIALS = "*" not in _CORS_ORIGINS
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=_cors_origins(),
-    allow_credentials=True,
+    allow_origins=_CORS_ORIGINS,
+    allow_credentials=_CORS_CREDENTIALS,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 # Nested under /personal/screenshare so the SPA can own assets/routes there.

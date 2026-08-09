@@ -28,12 +28,22 @@ class Settings(BaseSettings):
     livekit_url: str = Field(..., alias="LIVEKIT_URL")
     livekit_api_key: str = Field(..., alias="LIVEKIT_API_KEY")
     livekit_api_secret: str = Field(..., alias="LIVEKIT_API_SECRET")
-    frontend_origin: str = Field(default="http://localhost:5173", alias="FRONTEND_ORIGIN")
+    # Comma-separated browser origins allowed by CORS (e.g. local Vite + prod SPA host).
+    frontend_origin: str = Field(
+        default="http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174",
+        alias="FRONTEND_ORIGIN",
+    )
     token_ttl_seconds: int = Field(default=3600, alias="TOKEN_TTL_SECONDS")
 
     @property
     def livekit_configured(self) -> bool:
         return bool(self.livekit_url and self.livekit_api_key and self.livekit_api_secret)
+
+    @property
+    def cors_origins(self) -> list[str]:
+        """Parsed FRONTEND_ORIGIN list; use ['*'] to allow any origin."""
+        parts = [o.strip() for o in self.frontend_origin.split(",") if o.strip()]
+        return parts or ["*"]
 
 
 @lru_cache
