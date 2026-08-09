@@ -1,6 +1,7 @@
 /** Typed API client for the screenshare backend. */
 
-const API_BASE = import.meta.env.VITE_API_BASE ?? '/api';
+/** Nested under the SPA path so /personal/screenshare/assets stays static, not proxied. */
+const API_BASE = import.meta.env.VITE_API_BASE ?? '/personal/screenshare/api';
 
 export type TokenResponse = {
   token: string;

@@ -61,10 +61,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(sessions_router, prefix="/api")
+# Nested under /personal/screenshare so the SPA can own assets/routes there.
+API_PREFIX = "/personal/screenshare/api"
+
+app.include_router(sessions_router, prefix=API_PREFIX)
 
 
-@app.get("/api/healthz", response_model=HealthResponse, response_model_by_alias=True)
+@app.get(f"{API_PREFIX}/healthz", response_model=HealthResponse, response_model_by_alias=True)
 def healthz() -> HealthResponse:
     try:
         settings = get_settings()

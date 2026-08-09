@@ -42,7 +42,7 @@ cd src/frontend
 npm run dev
 ```
 
-Confirm the backend is healthy: `curl http://localhost:8000/api/healthz` → `{"status":"ok","livekitConfigured":true}` (see `contracts/backend-api.md`).
+Confirm the backend is healthy: `curl http://localhost:8000/personal/screenshare/api/healthz` → `{"status":"ok","livekitConfigured":true}` (see `contracts/backend-api.md`).
 
 ## Validation scenarios
 

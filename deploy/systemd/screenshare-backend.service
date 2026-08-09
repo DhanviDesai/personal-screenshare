@@ -1,0 +1,24 @@
+[Unit]
+Description=LiveKit Screenshare FastAPI backend
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/opt/livekit-screenshare/src/backend
+EnvironmentFile=/opt/livekit-screenshare/src/backend/.env
+# Bind to localhost only — nginx is the public front door.
+ExecStart=/opt/livekit-screenshare/src/backend/.venv/bin/uvicorn app.main:app \
+  --host 127.0.0.1 \
+  --port 8000 \
+  --workers 1
+Restart=on-failure
+RestartSec=5
+# Soft limits suitable for a small t3 instance.
+MemoryMax=512M
+CPUQuota=80%
+
+[Install]
+WantedBy=multi-user.target

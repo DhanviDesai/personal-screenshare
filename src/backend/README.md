@@ -37,7 +37,7 @@ source .venv/bin/activate
 uvicorn app.main:app --reload --port 8000
 ```
 
-Health check: `curl http://localhost:8000/api/healthz`
+Health check: `curl http://localhost:8000/personal/screenshare/api/healthz`
 
 ## Tests
 

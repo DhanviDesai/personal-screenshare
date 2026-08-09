@@ -6,6 +6,8 @@ import react from '@vitejs/plugin-react';
 const frontendDir = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
+  // App is hosted under /personal/screenshare/ on the shared API host.
+  base: '/personal/screenshare/',
   plugins: [react()],
   resolve: {
     alias: {
@@ -15,7 +17,8 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      '/api': {
+      // API only — keep under /personal/screenshare/api so SPA assets/routes stay on Vite.
+      '/personal/screenshare/api': {
         target: 'http://127.0.0.1:8000',
         changeOrigin: true,
       },

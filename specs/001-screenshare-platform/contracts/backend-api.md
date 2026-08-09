@@ -2,9 +2,9 @@
 
 **Feature**: `001-screenshare-platform` | **Date**: 2026-08-09
 
-Base path: `/api` (FastAPI app in `src/backend/app/main.py`). All endpoints are JSON over HTTPS. No authentication beyond the open-join model (FR-001); the backend does not accept or store the LiveKit API secret from any client — it is read from environment variables server-side only (see `research.md`).
+Base path: `/personal/screenshare/api` (FastAPI app in `src/backend/app/main.py`). All endpoints are JSON over HTTPS. No authentication beyond the open-join model (FR-001); the backend does not accept or store the LiveKit API secret from any client — it is read from environment variables server-side only (see `research.md`).
 
-## `POST /api/sessions/{sessionId}/token`
+## `POST /personal/screenshare/api/sessions/{sessionId}/token`
 
 Joins a session: mints a short-lived LiveKit access token for the given display name.
 
@@ -60,7 +60,7 @@ This does not prevent a participant from reconnecting with a fresh token under a
 
 ---
 
-## `POST /api/sessions/{sessionId}/screen-share/start`
+## `POST /personal/screenshare/api/sessions/{sessionId}/screen-share/start`
 
 Requests the single-presenter lock for screen sharing (FR-003a).
 
@@ -89,7 +89,7 @@ Requests the single-presenter lock for screen sharing (FR-003a).
 
 ---
 
-## `POST /api/sessions/{sessionId}/screen-share/stop`
+## `POST /personal/screenshare/api/sessions/{sessionId}/screen-share/stop`
 
 Releases the presenter lock (explicit stop, or called internally on disconnect/leave).
 
@@ -109,7 +109,7 @@ Releases the presenter lock (explicit stop, or called internally on disconnect/l
 
 ---
 
-## `POST /api/sessions/{sessionId}/leave`
+## `POST /personal/screenshare/api/sessions/{sessionId}/leave`
 
 Signals that a participant is leaving (called on explicit "Leave session" and as a best-effort beacon on LiveKit disconnect). Idempotent.
 
@@ -129,7 +129,7 @@ Signals that a participant is leaving (called on explicit "Leave session" and as
 
 ---
 
-## `GET /api/sessions/{sessionId}/presenter`
+## `GET /personal/screenshare/api/sessions/{sessionId}/presenter`
 
 Polls/queries current presenter state (used on join so a newly joined viewer's UI can reflect an in-progress share without racing the lock-start call — User Story 3 Scenario 1).
 
@@ -144,7 +144,7 @@ or, when no one is presenting:
 
 ---
 
-## `GET /api/healthz`
+## `GET /personal/screenshare/api/healthz`
 
 Liveness/readiness check confirming LiveKit environment variables are present and the service is up (supports constitution V observability and ops sanity-checking; not user-facing).
 
@@ -157,4 +157,4 @@ Liveness/readiness check confirming LiveKit environment variables are present an
 
 ## Error logging contract (applies to all endpoints)
 
-Every request that results in a 4xx/5xx MUST emit one structured log line including: `event` name, `sessionId`, `identity` (if known), `status_code`, and `reason` — satisfying FR-013 / constitution V for join, leave, publish, subscribe, and error paths. Leave/disconnect logging is emitted via the `POST /api/sessions/{sessionId}/leave` beacon call defined above (fire-and-forget, best-effort from the frontend on explicit leave or LiveKit disconnect), or captured via backend-side LiveKit webhooks if configured later — v1 requires at minimum the frontend-triggered beacon.
+Every request that results in a 4xx/5xx MUST emit one structured log line including: `event` name, `sessionId`, `identity` (if known), `status_code`, and `reason` — satisfying FR-013 / constitution V for join, leave, publish, subscribe, and error paths. Leave/disconnect logging is emitted via the `POST /personal/screenshare/api/sessions/{sessionId}/leave` beacon call defined above (fire-and-forget, best-effort from the frontend on explicit leave or LiveKit disconnect), or captured via backend-side LiveKit webhooks if configured later — v1 requires at minimum the frontend-triggered beacon.
