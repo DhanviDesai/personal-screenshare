@@ -1,0 +1,233 @@
+:root {
+  color-scheme: light;
+  --bg: #0f1c24;
+  --bg-elevated: #17303b;
+  --ink: #f4f7f5;
+  --muted: #9bb0b8;
+  --accent: #2ec4b6;
+  --accent-ink: #052825;
+  --warn: #f4a261;
+  --error: #e76f51;
+  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-body: 'Source Sans 3', 'Segoe UI', sans-serif;
+  font-family: var(--font-body);
+  line-height: 1.45;
+  font-weight: 400;
+  color: var(--ink);
+  background:
+    radial-gradient(1200px 600px at 10% -10%, #1d4e5f 0%, transparent 55%),
+    radial-gradient(900px 500px at 100% 0%, #245c4a 0%, transparent 50%),
+    var(--bg);
+  min-height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin: 0 0 0.25rem;
+}
+
+.session-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+.session-meta {
+  color: var(--muted);
+  margin: 0 0 1.5rem;
+}
+
+.join-form {
+  display: grid;
+  gap: 1rem;
+  max-width: 420px;
+  margin-top: 2rem;
+}
+
+.join-form label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.join-form input {
+  font: inherit;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid #2f4b56;
+  border-radius: 8px;
+  background: var(--bg-elevated);
+  color: var(--ink);
+}
+
+.join-form button,
+.controls-bar button,
+.status-banner button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+.form-error {
+  color: var(--error);
+  margin: 0;
+}
+
+.status-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  background: #1e3a45;
+}
+
+.status-banner.warning {
+  background: #3a2e1c;
+  color: var(--warn);
+}
+
+.status-banner.error {
+  background: #3a221c;
+  color: #ffb4a2;
+}
+
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  min-height: 280px;
+}
+
+/* When a screen-share tile is present, make it dominate the grid */
+.media-grid.has-screen {
+  grid-template-columns: 1fr;
+}
+
+.media-tile {
+  position: relative;
+  background: var(--bg-elevated);
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 180px;
+}
+
+/* Screen-share tile stretches to full width and taller height */
+.media-tile.screen {
+  grid-column: 1 / -1;
+  min-height: min(56vw, 600px);
+}
+
+.media-tile video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+  display: block;
+  min-height: 180px;
+}
+
+.media-tile.screen video {
+  min-height: min(56vw, 600px);
+}
+
+.tile-meta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+  font-size: 0.85rem;
+}
+
+.tile-kind,
+.mic-indicator {
+  color: var(--muted);
+}
+
+.empty-media {
+  color: var(--muted);
+  grid-column: 1 / -1;
+}
+
+.controls-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.controls-bar .leave {
+  background: #5c2a2a;
+  color: #ffd7d0;
+  margin-left: auto;
+}
+
+.controls-bar button[aria-pressed='true'] {
+  outline: 2px solid #fff3;
+}
+
+/* ── Sharing badge ─────────────────────────────────── */
+.sharing-badge {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ── Self-camera PiP overlay ───────────────────────── */
+.self-preview {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 180px;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  z-index: 100;
+}
+
+.self-preview video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transform: scaleX(-1); /* mirror so it feels natural */
+}
+
+.self-preview-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.75rem;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

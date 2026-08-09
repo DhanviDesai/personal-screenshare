@@ -1,0 +1,5 @@
+1. Livekit based screensharing, video and audio platform.
+2. In screensharing we should be able to capture audio too
+3. It will be a vite+react based website and python FastAPI server if needed
+4. Implementation for the website goes into src/frontend and the FastAPI server goes into src/backend
+5. All the tests go into tests
