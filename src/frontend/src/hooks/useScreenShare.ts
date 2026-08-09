@@ -1,5 +1,11 @@
 import { useCallback, useRef, useState } from 'react';
-import { LocalAudioTrack, LocalVideoTrack, Room, Track } from 'livekit-client';
+import {
+  LocalAudioTrack,
+  LocalVideoTrack,
+  Room,
+  ScreenSharePresets,
+  Track,
+} from 'livekit-client';
 import { startScreenShare, stopScreenShare } from '@/services/api';
 
 export type UseScreenShareResult = {
@@ -77,7 +83,11 @@ export function useScreenShare(
     let stream: MediaStream;
     try {
       stream = await navigator.mediaDevices.getDisplayMedia({
-        video: true,
+        video: {
+          frameRate: { ideal: 30, max: 30 },
+          width: { ideal: 1920 },
+          height: { ideal: 1080 },
+        },
         // Request audio — the browser will offer system/tab audio where supported.
         audio: true,
       });
@@ -98,10 +108,19 @@ export function useScreenShare(
     const [audioMT] = stream.getAudioTracks();
 
     if (videoMT) {
+      // Prefer smooth motion over static-slide sharpness.
+      videoMT.contentHint = 'motion';
       const videoTrack = new LocalVideoTrack(videoMT, undefined, true);
       tracksRef.current.video = videoTrack;
       await room.localParticipant.publishTrack(videoTrack, {
         source: Track.Source.ScreenShare,
+        // Highest layer 1080p; 720p30 is the middle simulcast layer (viewer default).
+        videoEncoding: ScreenSharePresets.h1080fps30.encoding,
+        screenShareSimulcastLayers: [
+          ScreenSharePresets.h360fps15,
+          ScreenSharePresets.h720fps30,
+        ],
+        degradationPreference: 'maintain-framerate',
       });
       videoMT.addEventListener('ended', () => void stopRef.current());
     }

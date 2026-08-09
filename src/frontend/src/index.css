@@ -44,6 +44,23 @@ h1 {
   padding: 2rem 1.25rem 4rem;
 }
 
+.session-page--sharing {
+  max-width: none;
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.session-page--sharing > header,
+.session-page--sharing > .status-banner,
+.session-page--sharing > .controls-bar {
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
 .session-meta {
   color: var(--muted);
   margin: 0 0 1.5rem;
@@ -74,7 +91,9 @@ h1 {
 
 .join-form button,
 .controls-bar button,
-.status-banner button {
+.status-banner button,
+.fullscreen-btn,
+.screen-quality-picker select {
   font: inherit;
   cursor: pointer;
   border: none;
@@ -111,30 +130,169 @@ h1 {
   color: #ffb4a2;
 }
 
-.media-grid {
+/* ── Stage: screen (80%) + participant rail (20%) ─── */
+.stage {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1rem;
+  gap: 0.75rem;
   min-height: 280px;
+  background: #0a1419;
 }
 
-/* When a screen-share tile is present, make it dominate the grid */
-.media-grid.has-screen {
-  grid-template-columns: 1fr;
+.stage--sharing {
+  grid-template-columns: minmax(0, 4fr) minmax(140px, 1fr);
+  width: 100%;
+  min-height: min(70vh, 820px);
+  border-radius: 0;
+}
+
+.stage--idle {
+  grid-template-columns: 1fr minmax(140px, 220px);
+  max-width: 1100px;
+  margin: 0 auto;
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 320px;
+}
+
+.stage-screen {
+  position: relative;
+  min-width: 0;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+}
+
+.stage-screen-toolbar {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  right: 0.75rem;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+.stage-screen-toolbar > * {
+  pointer-events: auto;
+}
+
+.screen-quality-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(10, 20, 25, 0.72);
+  padding: 0.25rem 0.4rem 0.25rem 0.65rem;
+  border-radius: 8px;
+}
+
+.screen-quality-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.screen-quality-picker select,
+.fullscreen-btn {
+  padding: 0.4rem 0.65rem;
+  font-size: 0.85rem;
+  background: var(--bg-elevated);
+  color: var(--ink);
+  border: 1px solid #2f4b56;
+}
+
+.stage-idle-copy {
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+}
+
+.stage-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.6rem;
+  background: var(--bg-elevated);
+  overflow-y: auto;
+  max-height: min(70vh, 820px);
+}
+
+.participant-slab {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #12262f;
+  aspect-ratio: 4 / 3;
+  flex: 0 0 auto;
+}
+
+.participant-slab.avatar-only {
+  aspect-ratio: auto;
+  min-height: 72px;
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.55rem;
+}
+
+.participant-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 600;
+  background: linear-gradient(145deg, #2ec4b6, #1d6f7a);
+  color: var(--accent-ink);
+}
+
+.participant-slab.has-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: #000;
+}
+
+.participant-slab.has-video video.mirrored {
+  transform: scaleX(-1);
+}
+
+.participant-slab-meta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding: 0.35rem 0.5rem;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+  font-size: 0.75rem;
+}
+
+.participant-slab.avatar-only .participant-slab-meta {
+  position: static;
+  background: none;
+  padding: 0;
 }
 
 .media-tile {
   position: relative;
-  background: var(--bg-elevated);
-  border-radius: 12px;
+  background: #000;
   overflow: hidden;
-  min-height: 180px;
+  flex: 1;
+  min-height: 0;
 }
 
-/* Screen-share tile stretches to full width and taller height */
 .media-tile.screen {
-  grid-column: 1 / -1;
-  min-height: min(56vw, 600px);
+  min-height: min(56vw, 640px);
+  height: 100%;
 }
 
 .media-tile video {
@@ -143,11 +301,7 @@ h1 {
   object-fit: contain;
   background: #000;
   display: block;
-  min-height: 180px;
-}
-
-.media-tile.screen video {
-  min-height: min(56vw, 600px);
+  min-height: min(50vh, 640px);
 }
 
 .tile-meta {
@@ -169,7 +323,9 @@ h1 {
 
 .empty-media {
   color: var(--muted);
-  grid-column: 1 / -1;
+  margin: 0;
+  padding: 1.5rem;
+  text-align: center;
 }
 
 .controls-bar {
@@ -189,45 +345,36 @@ h1 {
   outline: 2px solid #fff3;
 }
 
-/* ── Sharing badge ─────────────────────────────────── */
 .sharing-badge {
   color: var(--accent);
   font-weight: 600;
 }
 
-/* ── Self-camera PiP overlay ───────────────────────── */
-.self-preview {
-  position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
-  width: 180px;
-  aspect-ratio: 4 / 3;
-  border-radius: 12px;
-  overflow: hidden;
-  background: #000;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
-  border: 2px solid rgba(255, 255, 255, 0.12);
-  z-index: 100;
-}
+@media (max-width: 767px) {
+  .stage--sharing,
+  .stage--idle {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
 
-.self-preview video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transform: scaleX(-1); /* mirror so it feels natural */
-}
+  .stage-rail {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-height: none;
+  }
 
-.self-preview-label {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 0.3rem 0.5rem;
-  font-size: 0.75rem;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
-  color: #fff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  .participant-slab.has-video {
+    width: 140px;
+    flex: 0 0 140px;
+  }
+
+  .participant-slab.avatar-only {
+    width: min(200px, 70vw);
+    flex: 0 0 auto;
+  }
+
+  .screen-quality-picker {
+    display: none;
+  }
 }

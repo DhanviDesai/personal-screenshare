@@ -35,6 +35,12 @@ vi.mock('livekit-client', () => {
       Connected: 'connected',
     },
     Track: { Source: {}, Kind: {} },
+    ScreenSharePresets: {
+      h360fps15: { encoding: { maxBitrate: 400_000, maxFramerate: 15 } },
+      h720fps30: { encoding: { maxBitrate: 2_000_000, maxFramerate: 30 } },
+      h1080fps30: { encoding: { maxBitrate: 5_000_000, maxFramerate: 30 } },
+    },
+    VideoQuality: { LOW: 0, MEDIUM: 1, HIGH: 2 },
   };
 });
 

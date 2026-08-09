@@ -3,6 +3,7 @@ import {
   ConnectionState,
   Room,
   RoomEvent,
+  ScreenSharePresets,
   Track,
   type RemoteParticipant,
   type RemoteTrack,
@@ -109,7 +110,19 @@ export function useLiveKitRoom(): UseLiveKitRoomResult {
         await roomRef.current.disconnect();
         roomRef.current = null;
       }
-      const r = new Room({ adaptiveStream: true, dynacast: true });
+      const r = new Room({
+        adaptiveStream: true,
+        dynacast: true,
+        publishDefaults: {
+          // HIGH = 1080p30; simulcast LOW/MED include 720p30 (receiver default).
+          screenShareEncoding: ScreenSharePresets.h1080fps30.encoding,
+          screenShareSimulcastLayers: [
+            ScreenSharePresets.h360fps15,
+            ScreenSharePresets.h720fps30,
+          ],
+          degradationPreference: 'maintain-framerate',
+        },
+      });
       roomRef.current = r;
       setRoom(r);
       attachListeners(r);

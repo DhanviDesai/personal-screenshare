@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
-import { Track, type RemoteTrack } from 'livekit-client';
+import { Track, type LocalTrack, type RemoteTrack } from 'livekit-client';
 
 export type MediaTileProps = {
-  track: RemoteTrack;
+  track: RemoteTrack | LocalTrack;
   displayName: string;
   identity: string;
   source: Track.Source;
